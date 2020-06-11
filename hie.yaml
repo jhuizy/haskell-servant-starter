@@ -1,0 +1,9 @@
+cradle: 
+  cabal:
+    component: "exe:budget" 
+  direct:
+    arguments:
+      - -no-user-package-db
+      - -Wall
+      - -fdefer-typed-holes
+

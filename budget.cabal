@@ -22,5 +22,16 @@ executable budget
   -- other-extensions:
   build-depends:       base >=4.13 && <4.14
 		     , scotty
-  -- hs-source-dirs:
+         , text
+         , http-types
+         , mtl
+         , persistent
+         , persistent-sqlite
+         , persistent-template
+         , servant
+         , servant-server
+         , warp
+         , aeson
+         , resource-pool
+  hs-source-dirs:      src
   default-language:    Haskell2010
