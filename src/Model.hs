@@ -24,5 +24,6 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 User
   name Text
   password Text
+  Primary name
   deriving Show
 |]
