@@ -1,6 +1,9 @@
 cradle: 
   cabal:
-    component: "exe:budget" 
+    - component: "exe:budget" 
+      path: "./app/"
+    - component: "lib:budget"
+      path: "./src/"
   direct:
     arguments:
       - -no-user-package-db

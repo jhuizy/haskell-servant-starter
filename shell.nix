@@ -12,7 +12,7 @@ pkgs.stdenv.mkDerivation {
     ghcide
     haskellPackages.cabal2nix
     haskellPackages.hlint
-    haskellPackages.brittany
+    haskellPackages.ormolu
     haskellPackages.cabal2nix
     haskellPackages.ghcid
     coreutils
