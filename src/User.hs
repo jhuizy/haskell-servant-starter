@@ -16,8 +16,10 @@ import Data.Text (Text)
 import Database.Persist (PersistQueryRead)
 import Database.Persist (PersistQueryRead (selectFirst))
 import Database.Persist
+import Database.Persist (PersistEntity (Key))
 import Database.Persist.Sql (BaseBackend, SqlBackend, runSqlPool)
 import Database.Persist.Sql (Entity (Entity))
+import Database.Persist.Sql (PersistEntity (Key))
 import GHC.Generics (Generic)
 import Model
 import Servant
@@ -40,6 +42,30 @@ data Token
 
 instance ToJSON Token
 
+class MonadIO m => MonadUserService m where
+  getUser :: Text -> m (Maybe User)
+  putUser :: Text -> Text -> m (Maybe Text)
+
+  validatePassword :: Text -> Text -> m Bool
+  validatePassword username pass = do
+    mUser <- getUser username
+    return $ case mUser of
+      Just (User _ pass') -> pass == pass'
+      _ -> False
+
+instance MonadIO m => MonadUserService (AppT m) where
+  getUser username = do
+    mEntity <- runDB $ selectFirst [UserName ==. username] [LimitTo 1]
+    return $ case mEntity of
+      Just (Entity _ user) -> Just user
+      Nothing -> Nothing
+
+  putUser username password = do
+    mRecord <- runDB $ insertUnique $ User username password
+    return $ f <$> mRecord
+    where
+      f (UserKey key) = key
+
 type LoginAPI =
   "login" :> ReqBody '[JSON] LoginRequest :> Post '[JSON] Token
     :<|> "register" :> ReqBody '[JSON] LoginRequest :> Post '[JSON] Token
@@ -47,27 +73,14 @@ type LoginAPI =
 userServer :: MonadIO m => ServerT LoginAPI (AppT m)
 userServer = loginHandler :<|> registerHandler
 
-checkLogin ::
-  (MonadIO m, PersistQueryRead backend, BaseBackend backend ~ SqlBackend) =>
-  Text ->
-  Text ->
-  ReaderT backend m Bool
-checkLogin username pass = do
-  mEntity <- selectFirst [UserName ==. username] [LimitTo 1]
-  return $ case mEntity of
-    Just (Entity _ user) -> userPassword user == pass
-    Nothing -> False
-
 registerHandler :: MonadIO m => LoginRequest -> AppT m Token
 registerHandler (LoginRequest user pass) = do
-  conn <- asks configConnection
-  mRecord <- liftIO $ flip runSqlPool conn $ insertUnique $ User user pass
-  case mRecord of
+  mKey <- putUser user pass
+  case mKey of
     Just _ -> return $ Token "" ""
     Nothing -> throwError $ err400 {errBody = "Account already exists"}
 
 loginHandler :: MonadIO m => LoginRequest -> AppT m Token
 loginHandler (LoginRequest user pass) = do
-  conn <- asks configConnection
-  isOK <- liftIO $ runSqlPool (checkLogin user pass) conn
+  isOK <- validatePassword user pass
   if isOK then return (Token "" "") else throwError err403

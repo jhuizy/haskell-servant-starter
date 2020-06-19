@@ -15,6 +15,9 @@
 
 module Model where
 
+import App
+import Control.Monad.IO.Class (MonadIO (liftIO))
+import Control.Monad.Reader (MonadReader, ReaderT, asks)
 import Data.Text (Text)
 import Database.Persist
 import Database.Persist.Sqlite
@@ -29,3 +32,8 @@ User
   Primary name
   deriving Show
 |]
+
+runDB :: (MonadReader Config m, MonadIO m) => ReaderT SqlBackend IO b -> m b
+runDB query = do
+  conn <- asks configConnection
+  liftIO $ runSqlPool query conn
