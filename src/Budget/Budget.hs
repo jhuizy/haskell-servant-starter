@@ -8,9 +8,9 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Budget where
+module Budget.Budget where
 
-import App
+import Budget.App
 import Control.Applicative (Alternative ((<|>)))
 import Control.Monad.Except
   ( ExceptT,
@@ -34,13 +34,13 @@ import Data.Text
 import Database.Persist
 import Database.Persist.Sqlite
 import GHC.Generics (Generic)
-import Model
+import Budget.Model
 import Network.HTTP.Types
 import Network.Wai.Handler.Warp
 import Servant
 import Servant.API (ReqBody)
 import Servant.Server (err400)
-import User
+import Budget.User
 
 type API = LoginAPI
 

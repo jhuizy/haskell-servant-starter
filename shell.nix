@@ -16,6 +16,7 @@ pkgs.stdenv.mkDerivation {
     haskellPackages.cabal2nix
     haskellPackages.ghcid
     coreutils
+    gitAndTools.pre-commit
   ];
   shellHook = ''
     export NIX_GHC="`which ghc`"

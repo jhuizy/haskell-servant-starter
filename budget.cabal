@@ -6,7 +6,12 @@ build-type:         Simple
 extra-source-files: CHANGELOG.md
 
 library
-    exposed-modules:  Budget
+    exposed-modules:
+        Budget.Budget
+        Budget.App
+        Budget.User
+        Budget.Model
+
     hs-source-dirs:   src
     default-language: Haskell2010
     build-depends:
@@ -30,3 +35,13 @@ executable budget
     build-depends:
         base >=4.13 && <4.14,
         budget -any
+
+test-suite test-budget
+    type:             exitcode-stdio-1.0
+    main-is:          Main.hs
+    hs-source-dirs:   test
+    default-language: Haskell2010
+    build-depends:
+        base >=4.13 && <4.14,
+        budget -any,
+        hspec -any

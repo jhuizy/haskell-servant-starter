@@ -1,4 +1,4 @@
-{ mkDerivation, aeson, base, http-types, mtl, persistent
+{ mkDerivation, aeson, base, hspec, http-types, mtl, persistent
 , persistent-sqlite, persistent-template, resource-pool, servant
 , servant-server, stdenv, text, warp
 }:
@@ -13,6 +13,7 @@ mkDerivation {
     persistent-template resource-pool servant servant-server text warp
   ];
   executableHaskellDepends = [ base ];
+  testHaskellDepends = [ base hspec ];
   license = "unknown";
   hydraPlatforms = stdenv.lib.platforms.none;
 }

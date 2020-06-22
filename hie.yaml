@@ -4,6 +4,8 @@ cradle:
       path: "./app/"
     - component: "lib:budget"
       path: "./src/"
+    - component: "test:test-budget"
+      path: "./test"
   direct:
     arguments:
       - -no-user-package-db

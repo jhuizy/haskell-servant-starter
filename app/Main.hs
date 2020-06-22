@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Budget as B
+import qualified Budget.Budget as B
 
 main :: IO ()
 main = B.main

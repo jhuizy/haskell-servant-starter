@@ -4,24 +4,18 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
-module User where
+module Budget.User where
 
-import App
-import Control.Monad.IO.Class (MonadIO)
+import Budget.App
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Control.Monad.Reader (ReaderT, asks)
 import Data.Aeson (ToJSON)
 import Data.Aeson.Types (FromJSON)
 import Data.Text (Text)
-import Database.Persist (PersistQueryRead)
-import Database.Persist (PersistQueryRead (selectFirst))
 import Database.Persist
-import Database.Persist (PersistEntity (Key))
-import Database.Persist.Sql (BaseBackend, SqlBackend, runSqlPool)
-import Database.Persist.Sql (Entity (Entity))
-import Database.Persist.Sql (PersistEntity (Key))
+import Database.Persist.Sql
 import GHC.Generics (Generic)
-import Model
+import Budget.Model
 import Servant
 
 data LoginRequest
